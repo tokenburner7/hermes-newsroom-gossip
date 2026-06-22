@@ -1,0 +1,707 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { disclosure } from '../../lib/disclosure';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles');
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { data } = article;
+const { Content } = await render(article);
+
+const d = disclosure(data.review_path, data.label);
+const dateFmt = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const implications = data.implications.map((line) => {
+  const m = line.split(/\s*-?->\s*|\s+→\s+/);
+  return m.length >= 2
+    ? { finding: m[0].trim(), implication: m.slice(1).join(' → ').trim() }
+    : { finding: '', implication: line.trim() };
+});
+
+const receiptCount = data.claim_evidence.length;
+const spillCups = Math.min(5, data.implications.length);
+---
+
+<BaseLayout title={data.headline} description={data.dek}>
+  <article class="article">
+    <header class="hero">
+      <!-- BREAKING banner -->
+      <div class="breaking-bar">
+        <span class="breaking-tag">BREAKING</span>
+        <span>{data.type.replace(/_/g, ' ')}</span>
+      </div>
+
+      <!-- EXCLUSIVE starburst -->
+      <div class="starburst" aria-hidden="true"><span>EXCLUSIVE</span></div>
+
+      <!-- Hero image -->
+      <figure class="hero-photo">
+        <img src="https://placehold.co/1200x675/111/FFE600?text=EXCLUSIVE+PHOTO" alt="Exclusive photo relating to this story" loading="eager" width="1200" height="675">
+        <figcaption>📸 EXCLUSIVE: THE PHOTO THEY DIDN'T WANT YOU TO SEE</figcaption>
+      </figure>
+
+      <div class="hero-rail">
+        <span class="kicker">{data.type.replace(/_/g, ' ')}</span>
+        {receiptCount > 0 && (
+          <span class="receipts-hero">🧾 {receiptCount} RECEIPTS ON FILE</span>
+        )}
+        <span class="crude-star" aria-hidden="true"></span>
+      </div>
+      <h1>{data.headline}</h1>
+      {data.dek && <p class="dek">{data.dek}</p>}
+      <div class="meta">
+        <span class="byline-shame">BY THE GOSSIP DESK &bull; {dateFmt.format(data.published_at)} &bull; {receiptCount} SOURCES</span>
+      </div>
+    </header>
+
+    {
+      implications.length > 0 && (
+        <section class="angle">
+          <div class="angle-head">
+            <h2 class="tab-label">☕ THE TEA</h2>
+            <div class="spillometer" aria-label={`Spill level: ${spillCups} of 5`}>
+              <span aria-hidden="true">{'☕'.repeat(spillCups)}</span>
+              <span class="spillometer-label">{spillCups}/5 SPILL</span>
+            </div>
+          </div>
+          <ul>
+            {implications.map((it) => (
+              <li>
+                {it.finding && <span class="finding">{it.finding}</span>}
+                <span class="implication">{it.implication}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <div class="body">
+      <Content />
+    </div>
+
+    {
+      receiptCount > 0 && (
+        <section class="evidence" id="evidence">
+          <div class="evidence-head">
+            <h2 class="tab-label">🔒 CASE FILE</h2>
+            <span class="evidence-count">{receiptCount} CLAIMS &middot; HASH-LOCKED</span>
+          </div>
+          <p class="evidence-intro">
+            Every claim is backed by an exact source span and SHA-256 hash.
+            Click any <sup>[N]</sup> marker in the story to jump to its receipt.
+          </p>
+          <div class="evidence-grid">
+            {data.claim_evidence.map((ev) => (
+              <details class="evidence-item" id={`evidence-${ev.claim_id}`}>
+                <summary>
+                  <span class="ev-num">{ev.claim_id}</span>
+                  <span class="ev-text">{ev.claim_text}</span>
+                </summary>
+                <div class="ev-detail">
+                  <div class="ev-field">
+                    <span class="ev-label">EXCERPT</span>
+                    <blockquote>{ev.supporting_span}</blockquote>
+                  </div>
+                  <div class="ev-row">
+                    <div class="ev-field ev-field--hash">
+                      <span class="ev-label">SHA-256</span>
+                      <code class="ev-hash">{ev.span_sha256}</code>
+                    </div>
+                    <span class="stamp">VERIFIED</span>
+                  </div>
+                  <div class="ev-field">
+                    <span class="ev-label">SOURCE</span>
+                    <a href={ev.source_url} target="_blank" rel="noopener noreferrer">{ev.source_title}</a>
+                  </div>
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      data.sources.length > 0 && (
+        <section class="sources">
+          <h2>SOURCES</h2>
+          <ol>
+            {data.sources.map((s) => (
+              <li>
+                <a href={s.url} target="_blank" rel="noopener noreferrer">
+                  {s.title || s.url}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+
+    <!-- SOUND OFF reaction section -->
+    <section class="soundoff">
+      <h2 class="tab-label">SOUND OFF</h2>
+      <div class="soundoff-grid">
+        <button class="react" data-react="shocking"><span aria-hidden="true">😱</span> SHOCKING</button>
+        <button class="react" data-react="outraged"><span aria-hidden="true">😡</span> OUTRAGED</button>
+        <button class="react" data-react="canteven"><span aria-hidden="true">😂</span> CAN'T EVEN</button>
+        <button class="react" data-react="whocares"><span aria-hidden="true">🥱</span> WHO CARES</button>
+      </div>
+    </section>
+
+    {
+      data.tags.length > 0 && (
+        <footer class="tags">
+          {data.tags.map((t) => (
+            <span class="tag">{t}</span>
+          ))}
+        </footer>
+      )
+    }
+  </article>
+
+  <script>
+    // Citation linking
+    document.querySelectorAll('.body p, .body li').forEach(el => {
+      el.innerHTML = el.innerHTML.replace(
+        /\[\^claim_(\d+)\]/g,
+        '<a href="#evidence-$1" class="cite-link">[$1]</a>'
+      );
+    });
+
+    document.querySelectorAll('.cite-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target && target.tagName === 'DETAILS') {
+          target.open = true;
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    });
+
+    // SOUND OFF localStorage reaction buttons
+    document.querySelectorAll('.react').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = 'react-' + btn.dataset.react;
+        try {
+          const current = parseInt(localStorage.getItem(key) || '0');
+          localStorage.setItem(key, String(current + 1));
+        } catch (_) { /* storage blocked */ }
+        btn.classList.add('voted');
+        setTimeout(() => btn.classList.remove('voted'), 800);
+      });
+    });
+  </script>
+
+  <style>
+    .article { max-width: 100%; }
+
+    /* ── Hero ── */
+    .hero {
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: var(--rule) solid var(--line-dark);
+      box-shadow: 0 var(--rule) 0 0 var(--red);
+      position: relative;
+    }
+
+    /* BREAKING bar */
+    .breaking-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--line-dark);
+      color: #fff;
+      padding: 6px 12px;
+      font: 800 13px/1 var(--font);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 16px;
+    }
+    .breaking-tag {
+      background: var(--red);
+      padding: 3px 8px;
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink {
+      50% { opacity: .25; }
+    }
+
+    /* Hero image */
+    .hero-photo {
+      position: relative;
+      margin: 0 0 18px;
+      border: 6px solid var(--yell);
+      box-shadow: var(--shadow-hard);
+      background: #000;
+    }
+    .hero-photo img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .hero-photo figcaption {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: rgba(0,0,0,.78);
+      color: #fff;
+      font: 800 14px/1.2 var(--font);
+      text-transform: uppercase;
+      padding: 8px 12px;
+      letter-spacing: .03em;
+    }
+
+    .hero-rail {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .kicker {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #fff;
+      background: var(--red);
+      padding: 4px 10px;
+      transform: rotate(-2deg);
+    }
+    .receipts-hero {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--red);
+      letter-spacing: 0.04em;
+    }
+    .hero h1 {
+      font-size: clamp(34px, 6vw, 60px);
+      font-weight: 900;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      margin: 0 0 12px;
+      font-family: var(--display);
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 var(--yell);
+      overflow-wrap: anywhere;
+      hyphens: auto;
+    }
+    @media (max-width: 480px) {
+      .hero h1 {
+        text-shadow: 1px 1px 0 var(--yell);
+      }
+    }
+    .hero .dek {
+      font-size: 18px;
+      line-height: 1.45;
+      color: var(--ink-soft);
+      margin: 0 0 14px;
+    }
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--ink-faint);
+    }
+    .byline-shame {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-soft);
+      letter-spacing: 0.03em;
+    }
+
+    /* Crude star */
+    .crude-star {
+      transform: rotate(35deg) rotate(-9deg);
+      margin-left: 4px;
+    }
+
+    /* ── THE TEA ── */
+    .angle {
+      border: var(--rule) solid var(--line-dark);
+      padding: 18px 20px;
+      margin: 0 0 32px;
+      background: linear-gradient(135deg, var(--yell), var(--yell-soft));
+      box-shadow: var(--shadow-hard);
+      position: relative;
+    }
+    .angle::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gloss);
+      pointer-events: none;
+    }
+    .angle-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .angle .tab-label {
+      transform: rotate(-1deg);
+    }
+    .spillometer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+    }
+    .spillometer-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--red);
+      border: 2px solid var(--red);
+      padding: 2px 6px;
+    }
+    .angle ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .angle li {
+      font-size: 15px;
+      line-height: 1.5;
+      padding-left: 18px;
+      position: relative;
+    }
+    .angle li::before {
+      content: '🔥';
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 12px;
+    }
+    .angle .finding {
+      display: block;
+      color: var(--ink);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .angle .implication {
+      color: var(--ink-soft);
+    }
+
+    /* ── Body ── */
+    .body {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+    .body :global(h2) {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 36px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--line);
+    }
+    .body :global(h3) {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 28px 0 8px;
+    }
+    .body :global(p) {
+      margin: 0 0 18px;
+    }
+    .body :global(a) {
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-color: var(--red);
+      text-underline-offset: 3px;
+    }
+    .body :global(a:hover) { color: var(--red); }
+    .body :global(blockquote) {
+      margin: 0 0 18px;
+      padding: 14px 18px;
+      border-left: var(--rule-mid) solid var(--line-dark);
+      background: var(--surface);
+      font-size: 16px;
+      font-style: italic;
+      color: var(--ink-soft);
+    }
+    .body :global(code) {
+      font-family: var(--mono);
+      font-size: 0.88em;
+      background: #FFF;
+      border: 1px solid var(--line);
+      padding: 1px 5px;
+    }
+
+    /* Yellow highlighter-pen effect */
+    .body :global(mark.hl) {
+      background: linear-gradient(120deg, var(--yell) 0%, var(--yell) 100%);
+      background-repeat: no-repeat;
+      background-size: 100% 60%;
+      background-position: 0 70%;
+      color: inherit;
+      padding: 0 2px;
+      box-decoration-break: clone;
+    }
+
+    /* ── Citation pills ── */
+    .body :global(.cite-link) {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 18px;
+      height: 18px;
+      background: var(--line-dark);
+      color: #FFF;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 0 4px;
+      vertical-align: middle;
+      transition: background 0.1s;
+    }
+    .body :global(.cite-link:hover) {
+      background: var(--red);
+      color: #FFF;
+      text-decoration: none;
+    }
+
+    /* ── CASE FILE (evidence) ── */
+    .evidence {
+      margin: 52px 0 0;
+      padding: 28px 0 0;
+      border-top: var(--rule) solid var(--line-dark);
+    }
+    .evidence-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .evidence .tab-label {
+      font-size: 16px;
+    }
+    .evidence-count {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--ink-faint);
+      letter-spacing: 0.06em;
+    }
+    .evidence-intro {
+      color: var(--ink-soft);
+      font-size: 14px;
+      margin: 0 0 22px;
+    }
+    .evidence-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .evidence-item {
+      border: var(--rule-mid) solid var(--line-dark);
+      background: var(--surface);
+    }
+    .evidence-item[open] {
+      box-shadow: var(--shadow-hard);
+      border-left: var(--rule-mid) solid var(--red);
+    }
+    .evidence-item summary {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 16px;
+      cursor: pointer;
+      user-select: none;
+      list-style: none;
+    }
+    .evidence-item summary::-webkit-details-marker { display: none; }
+    .ev-num {
+      flex-shrink: 0;
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--red);
+      line-height: 1;
+      min-width: 28px;
+      text-align: center;
+    }
+    .ev-text {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--ink);
+    }
+    .ev-detail {
+      padding: 0 16px 16px;
+      display: grid;
+      gap: 14px;
+    }
+    .ev-label {
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-faint);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .ev-field blockquote {
+      margin: 0;
+      padding: 12px 14px;
+      background: var(--yell-soft);
+      border-left: 4px solid var(--yell);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+    .ev-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .ev-field--hash { flex: 1; }
+    .ev-hash {
+      display: block;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-soft);
+      background: #F5F5F5;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      word-break: break-all;
+      line-height: 1.5;
+    }
+    .ev-field a {
+      font-size: 14px;
+      color: var(--ink);
+      text-decoration: underline;
+      word-break: break-word;
+    }
+
+    /* ── SOUND OFF ── */
+    .soundoff {
+      border: var(--rule) solid var(--line-dark);
+      box-shadow: var(--shadow-hard);
+      background: var(--surface);
+      padding: 18px;
+      margin: 28px 0;
+    }
+    .soundoff .tab-label {
+      margin-bottom: 14px;
+    }
+    .soundoff-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .react {
+      font: 800 14px/1 var(--font);
+      text-transform: uppercase;
+      padding: 14px 8px;
+      border: 3px solid var(--line-dark);
+      background: #fff;
+      cursor: pointer;
+      transition: transform .1s, background .1s;
+    }
+    .react:hover {
+      background: var(--yell);
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-hard);
+    }
+    .react:focus-visible {
+      outline: 3px solid var(--red);
+      outline-offset: 2px;
+    }
+    .react.voted {
+      background: var(--red);
+      color: #fff;
+    }
+
+    /* ── Sources ── */
+    .sources {
+      margin: 44px 0 0;
+      padding: 20px;
+      border: var(--rule-mid) solid var(--line-dark);
+      background: var(--surface);
+    }
+    .sources h2 {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      margin: 0 0 12px;
+    }
+    .sources ol {
+      margin: 0;
+      padding-left: 20px;
+      display: grid;
+      gap: 8px;
+    }
+    .sources li { font-size: 14px; }
+    .sources a { text-decoration: underline; word-break: break-word; }
+
+    /* ── Tags ── */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 2px solid var(--line);
+    }
+    .tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-soft);
+      border: 2px solid var(--line-dark);
+      padding: 4px 9px;
+      transition: border-color 0.12s, color 0.12s;
+    }
+    .tag:hover { border-color: var(--red); color: var(--ink); }
+
+    @media (max-width: 720px) {
+      .hero h1 {
+        font-size: clamp(26px, 5vw, 40px);
+      }
+      .soundoff-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-photo {
+        border-width: 4px;
+      }
+      .hero-photo figcaption {
+        font-size: 11px;
+        padding: 5px 8px;
+      }
+      .byline-shame {
+        font-size: 10px;
+      }
+    }
+  </style>
+</BaseLayout>

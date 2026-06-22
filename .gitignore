@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+.venv/
+
+# Environment
+.env
+.env.bak
+.env.example
+
+# Astro build output
+web/dist/
+web/node_modules/
+web/.astro/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Hermes
+.hermes/experiment/
+
+# Review artifacts (these were pipeline outputs, not source)
+HERMES_REVIEW.md
+UX_ADVERSARIAL_REVIEW.md
+REVIEW_SYNTHESIS.md
+UX_ENHANCEMENT_PLAN.md

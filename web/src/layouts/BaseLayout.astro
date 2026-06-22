@@ -1,0 +1,674 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = 'The Gossip', description = '' } = Astro.props;
+const fullTitle = title === 'The Gossip' ? title : `${title} · The Gossip`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{fullTitle}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "6ed43d34957a49fcb90ec8e43f7db523"}'></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span class="brand-mark">The<span class="x">GOSSIP</span></span>
+        </a>
+        <nav class="site-nav">
+          <a href="/">LATEST</a>
+          <a href="/">CELEBS</a>
+          <a href="/">SIGHTINGS</a>
+          <a href="/">BLIND ITEMS</a>
+          <a href="/">SCANDALS</a>
+        </nav>
+      </div>
+      <div class="ticker">
+        <span class="ticker-label">🔥 HOT NOW</span>
+        <div class="ticker-viewport">
+          <div class="ticker-track">
+            <span class="ticker-item">KANYE'S JULY 4 CONCERT IN JEOPARDY — Mayor Demands Cancellation</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">A-LIST COUPLE HEADED FOR $200M DIVORCE — Lawyers Already Involved</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">HOLLYWOOD'S HOTTEST NEW COUPLE SPOTTED AT NOBU — Exclusive Photos Inside</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">MEGA-STAR CAUGHT IN 3AM TACO RUN SCANDAL — Witnesses Say He Wasn't Alone</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">REALITY TV VILLAIN DROPPED FROM REUNION SPECIAL — Cast Revolts</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">POP STAR'S SECRET WEDDING EXPOSED — Marriage License Surfaces</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">ACTRESS WALKS OFF SET — $80M Production In Chaos</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">RAPPER'S ENTOURAGE BRAWL CAUGHT ON TAPE — Police Called, No Arrests</span><span class="ticker-sep">◆</span>
+            <!-- duplicate for seamless loop -->
+            <span class="ticker-item">KANYE'S JULY 4 CONCERT IN JEOPARDY — Mayor Demands Cancellation</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">A-LIST COUPLE HEADED FOR $200M DIVORCE — Lawyers Already Involved</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">HOLLYWOOD'S HOTTEST NEW COUPLE SPOTTED AT NOBU — Exclusive Photos Inside</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">MEGA-STAR CAUGHT IN 3AM TACO RUN SCANDAL — Witnesses Say He Wasn't Alone</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">REALITY TV VILLAIN DROPPED FROM REUNION SPECIAL — Cast Revolts</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">POP STAR'S SECRET WEDDING EXPOSED — Marriage License Surfaces</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">ACTRESS WALKS OFF SET — $80M Production In Chaos</span><span class="ticker-sep">◆</span>
+            <span class="ticker-item">RAPPER'S ENTOURAGE BRAWL CAUGHT ON TAPE — Police Called, No Arrests</span><span class="ticker-sep">◆</span>
+          </div>
+        </div>
+        <span class="ticker-time">UPDATED HOURLY</span>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <slot />
+    </main>
+
+    <section id="subscribe" class="subscribe">
+      <div class="wrap">
+        <div class="subscribe-inner">
+          <div class="subscribe-copy">
+            <h2>NEVER MISS THE TEA</h2>
+            <p>Daily gossip drops. Every claim hash-locked. No vibes-only journalism.</p>
+            <p class="sub-badge">JOIN THE GOSSIP ADDICTS</p>
+          </div>
+          <form
+            class="subscribe-form"
+            action="https://buttondown.com/api/emails/embed-subscribe/Stock33"
+            method="post"
+            target="_blank"
+          >
+            <input type="email" name="email" placeholder="you@domain.com" aria-label="Email address" required />
+            <input type="hidden" value="1" name="embed" />
+            <button type="submit">SUBSCRIBE</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <span class="brand-mark">The<span class="x">GOSSIP</span></span>
+            <p>Sourced. Snarky. Daily.</p>
+          </div>
+          <div class="footer-links">
+            <a href="/rss.xml">RSS</a>
+            <a href="#">About</a>
+            <a href="#">Tip Line</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>Autonomous gossip newsroom. Machine-generated content, quality-gated. Every claim carries provenance.</p>
+          <p class="disclaimer-scroll">All gossip hash-locked. Don't trust us, verify the receipts. Probably.</p>
+          <p class="muted">&copy; {new Date().getFullYear()} The Gossip</p>
+        </div>
+      </div>
+    </footer>
+
+    <style is:global>
+      :root {
+        /* ── Aero background — hotter saturated tropical sky ── */
+        --bg-top:    #7FC4E8;
+        --bg-mid:    #B6E0F0;
+        --bg-bot:    #E9F6FB;
+        --bg-aqua:   #00C2FF;
+        --bg-sky2:   #5AB0E0;
+
+        /* ── Glass — wetter, layered ── */
+        --surface:   rgba(255,255,255,0.72);
+        --surface-2: rgba(255,255,255,0.42);
+        --gloss:     linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.35) 48%, rgba(255,255,255,0.08) 49%, rgba(255,255,255,0.22) 100%);
+        --blur:      22px;
+
+        /* ── Ink ── */
+        --ink:       #0A0A0A;
+        --ink-soft:  #2E2E2E;
+        --ink-faint: #6B6B6B;
+        --line:      #C8C8C8;
+        --line-dark: #000000;
+
+        /* ── Tabloid color system ── */
+        --red:       #FF0033;
+        --red-deep:  #C00018;
+        --red-soft:  #FFE3E8;
+        --yell:      #FFE600;
+        --yell-soft: #FFF7C2;
+        --magenta:   #FF2D95;
+        --aqua:      #00C2FF;
+        --lime:      #B6FF00;
+
+        /* ── Structure / industrial ── */
+        --rule:      6px;
+        --rule-mid:  4px;
+        --radius:    0px;
+        --radius-glass: 10px;
+        --maxw:      1100px;
+
+        /* ── Shadows ── */
+        --shadow-hard: 5px 5px 0 var(--line-dark);
+        --shadow-glow: 0 0 0 3px var(--yell), 0 0 22px rgba(255,0,51,0.45);
+        --shadow-soft: 0 8px 24px rgba(0,40,80,0.18);
+
+        /* ── Type ── */
+        --font:      'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        --mono:      'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+        --display:   'Archivo Black', 'Inter', sans-serif;
+
+        /* ── Motion ── */
+        --tick-dur:  32s;
+      }
+
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+
+      body {
+        margin: 0;
+        background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 40%, var(--bg-bot) 100%);
+        background-attachment: fixed;
+        color: var(--ink);
+        font-family: var(--font);
+        font-size: 16px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .wrap {
+        width: 100%;
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      a { color: var(--ink); text-decoration: none; }
+      a:hover { color: var(--red); }
+      a:focus-visible{outline:3px solid var(--red);outline-offset:2px;}
+
+      /* ── Header ── */
+      .site-header {
+        background: rgba(255,255,255,0.45);
+        backdrop-filter: saturate(200%) blur(var(--blur));
+        -webkit-backdrop-filter: saturate(200%) blur(var(--blur));
+        border-bottom: var(--rule) solid var(--line-dark);
+        box-shadow: 0 var(--rule) 0 0 var(--red);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .site-header::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--gloss);
+        pointer-events: none;
+        z-index: 1;
+      }
+      .site-header .wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 58px;
+        position: relative;
+        z-index: 2;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--ink);
+        font-weight: 900;
+        letter-spacing: -0.03em;
+      }
+      .brand:hover { text-decoration: none; }
+      .brand-mark {
+        font-size: 26px;
+        text-transform: uppercase;
+        font-family: var(--display);
+        font-style: italic;
+      }
+      .brand .x {
+        background: var(--red);
+        color: #fff;
+        padding: 0 6px;
+        margin: 0 -2px;
+        font-style: normal;
+      }
+
+      /* LIVE dot */
+      .live-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: var(--red);
+        border-radius: 50%;
+        flex-shrink: 0;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.25; }
+      }
+
+      .site-nav {
+        display: flex;
+        gap: 20px;
+      }
+      .site-nav a {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--ink-soft);
+        text-transform: uppercase;
+        position: relative;
+      }
+      .site-nav a::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 0;
+        height: 2px;
+        background: var(--red);
+        transition: width 0.15s;
+      }
+      .site-nav a:hover { color: var(--red); }
+      .site-nav a:hover::after { width: 100%; }
+      .site-nav a:first-child { color: var(--red); }
+
+      /* ── Ticker — multi-item animated marquee ── */
+      .ticker {
+        background: var(--line-dark);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        height: 34px;
+        overflow: hidden;
+        position: relative;
+        z-index: 2;
+      }
+      .ticker-label {
+        background: var(--red);
+        padding: 0 14px;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        flex-shrink: 0;
+        line-height: 34px;
+        animation: blink-bg 2s steps(1) infinite;
+      }
+      @keyframes blink-bg {
+        50% { background: var(--red-deep); }
+      }
+      .ticker-viewport {
+        flex: 1;
+        overflow: hidden;
+        mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
+        -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
+      }
+      .ticker-track {
+        display: flex;
+        gap: 0;
+        white-space: nowrap;
+        animation: ticker-scroll var(--tick-dur) linear infinite;
+        width: fit-content;
+      }
+      @keyframes ticker-scroll {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+      }
+      .ticker-item {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        padding: 0 16px;
+        line-height: 34px;
+      }
+      .ticker-sep {
+        color: var(--yell);
+        font-size: 10px;
+        line-height: 34px;
+        flex-shrink: 0;
+      }
+      .ticker-time {
+        flex-shrink: 0;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--yell);
+        padding: 0 14px;
+        line-height: 34px;
+        border-left: 2px solid rgba(255,255,255,0.2);
+        background: var(--line-dark);
+        z-index: 2;
+      }
+      .ticker:hover .ticker-track {
+        animation-play-state: paused;
+      }
+
+      main.wrap {
+        flex: 1 0 auto;
+        padding-top: 28px;
+        padding-bottom: 48px;
+      }
+
+      /* ── Footer ── */
+      .site-footer {
+        border-top: var(--rule) solid var(--line-dark);
+        box-shadow: 0 calc(var(--rule) * -1) 0 0 var(--red);
+        background: var(--surface);
+        backdrop-filter: blur(var(--blur));
+        -webkit-backdrop-filter: blur(var(--blur));
+        padding: 32px 0 20px;
+        font-size: 13px;
+        color: var(--ink-soft);
+      }
+      .footer-grid {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 40px;
+        margin-bottom: 20px;
+      }
+      .footer-brand .brand-mark {
+        font-size: 18px;
+        font-family: var(--display);
+      }
+      .footer-brand .brand-mark .x {
+        background: var(--red);
+        color: #fff;
+        padding: 0 6px;
+        font-style: normal;
+      }
+      .footer-brand p { margin: 4px 0 0; font-size: 12px; color: var(--ink-faint); }
+      .footer-links { display: flex; gap: 18px; }
+      .footer-links a {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--ink-soft);
+      }
+      .footer-links a:hover {
+        background: var(--line-dark);
+        color: #fff;
+        padding: 3px 8px;
+        margin: -3px -8px;
+      }
+      .footer-bottom {
+        border-top: 2px solid var(--line);
+        padding-top: 14px;
+      }
+      .footer-bottom p { margin: 0 0 4px; max-width: 56ch; }
+      .disclaimer-scroll {
+        font-size: 11px;
+        font-style: italic;
+        color: var(--ink-faint);
+        margin: 4px 0 8px !important;
+      }
+      .muted { color: var(--ink-faint); }
+
+      /* ── Shared badge ── */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        line-height: 1;
+        padding: 5px 10px;
+        border: 3px solid var(--line-dark);
+        white-space: nowrap;
+      }
+      .badge::before {
+        content: '●';
+        font-size: 6px;
+      }
+      .badge--auto_gated {
+        background: #FFF;
+        color: var(--ink);
+      }
+      .badge--human_reviewed {
+        background: var(--line-dark);
+        color: #FFF;
+        transform: rotate(-1deg);
+      }
+      .badge--queued {
+        background: var(--yell);
+        color: var(--ink);
+      }
+
+      /* ── Reusable utilities ── */
+      .tab-label {
+        display: inline-block;
+        background: var(--line-dark);
+        color: #fff;
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-family: var(--display);
+      }
+
+      .btn-aero {
+        display: block;
+        padding: 10px 0;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ink);
+        background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(0,194,255,0.35));
+        border: 2px solid var(--line-dark);
+        border-radius: var(--radius-glass);
+        box-shadow: var(--shadow-hard);
+        transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+        cursor: pointer;
+      }
+      .btn-aero:hover {
+        transform: translate(-1px, -1px);
+        box-shadow: 7px 7px 0 var(--red);
+        background: linear-gradient(180deg, rgba(255,255,255,1), rgba(0,194,255,0.5));
+        text-decoration: none;
+        color: var(--ink);
+      }
+
+      .stamp {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        color: var(--red);
+        border: 2px solid var(--red);
+        padding: 6px 10px;
+        transform: rotate(-3deg);
+        opacity: 0.88;
+      }
+
+      .crude-star {
+        position: relative;
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 18px solid transparent;
+        border-right: 18px solid transparent;
+        border-bottom: 13px solid transparent;
+        transform: rotate(35deg);
+        filter: none;
+        outline: 3px solid var(--red);
+        outline-offset: -2px;
+      }
+      .crude-star::before {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: -18px;
+        width: 0;
+        height: 0;
+        border-left: 18px solid transparent;
+        border-right: 18px solid transparent;
+        border-bottom: 13px solid transparent;
+        transform: rotate(-70deg);
+        outline: 3px solid var(--red);
+        outline-offset: -2px;
+      }
+
+      .starburst {
+        position: absolute;
+        top: -14px;
+        right: -10px;
+        width: 96px;
+        height: 96px;
+        display: grid;
+        place-items: center;
+        z-index: 4;
+      }
+      .starburst::before,
+      .starburst::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--red);
+        border: 3px solid var(--line-dark);
+        box-shadow: var(--shadow-hard);
+      }
+      .starburst::before { transform: rotate(0deg); }
+      .starburst::after { transform: rotate(45deg); }
+      .starburst span {
+        position: relative;
+        z-index: 1;
+        color: #fff;
+        font: 900 13px/1 var(--display);
+        transform: rotate(-8deg);
+        text-align: center;
+      }
+
+      @keyframes flash {
+        0% { opacity: 0; }
+        15% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+
+      /* ── Subscribe ── */
+      .subscribe {
+        border-top: var(--rule) solid var(--line-dark);
+        box-shadow: 0 calc(var(--rule) * -1) 0 0 var(--red);
+        background: linear-gradient(135deg, rgba(0,194,255,0.15), rgba(255,255,255,0.65));
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 36px 0;
+      }
+      .subscribe-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+        flex-wrap: wrap;
+      }
+      .subscribe-copy h2 {
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        margin: 0 0 4px;
+        font-family: var(--display);
+        text-transform: uppercase;
+        text-shadow: 1px 1px 0 var(--yell);
+      }
+      .subscribe-copy p {
+        color: var(--ink-soft);
+        margin: 0;
+        font-size: 14px;
+        max-width: 40ch;
+      }
+      .sub-badge {
+        display: inline-block;
+        margin-top: 8px !important;
+        font-size: 11px !important;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--red);
+        border: 2px solid var(--red);
+        padding: 4px 10px;
+        max-width: none !important;
+      }
+      .subscribe-form {
+        display: flex;
+        gap: 0;
+        flex-shrink: 0;
+      }
+      .subscribe-form input[type='email'] {
+        padding: 12px 16px;
+        font: inherit;
+        font-size: 14px;
+        border: var(--rule-mid) solid var(--line-dark);
+        border-right: none;
+        background: #FFF;
+        width: 240px;
+      }
+      .subscribe-form button {
+        padding: 12px 22px;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #FFF;
+        background: var(--line-dark);
+        border: var(--rule-mid) solid var(--line-dark);
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.12s, box-shadow 0.12s;
+      }
+      .subscribe-form button:hover {
+        background: var(--red);
+        border-color: var(--red);
+        box-shadow: var(--shadow-hard);
+      }
+
+      /* ── Single global reduced-motion kill-switch ── */
+      @media (prefers-reduced-motion: reduce) {
+        .ticker-track,
+        .ticker-label,
+        .live-dot,
+        .breaking-tag,
+        .card:hover::after,
+        .starburst,
+        .react,
+        *[class*="anim"] {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 720px) {
+        .site-nav { display: none; }
+        .subscribe-inner { flex-direction: column; align-items: flex-start; }
+        .subscribe-form { width: 100%; }
+        .subscribe-form input[type='email'] { flex: 1; }
+        .footer-grid { flex-direction: column; gap: 16px; }
+      }
+
+      @media (max-width: 420px) {
+        :root {
+          --rule: 4px;
+          --shadow-hard: 3px 3px 0 var(--line-dark);
+        }
+      }
+    </style>
+  </body>
+</html>

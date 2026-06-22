@@ -1,0 +1,74 @@
+# Phase 0: Postgres 16 + pgvector. Phase 2 adds a Temporal dev server (plan §6).
+#
+# NOTE: the app DB host port is 5433 (not 5432) because a local Postgres already
+# owns 5432 on this machine. The container still listens on 5432 internally. Keep
+# DATABASE_URL in sync (see .env.example).
+#
+# Temporal: a single-container dev server (`temporal server start-dev`) — gRPC on
+# 7233, Web UI on 8233 (http://localhost:8233). It uses an embedded SQLite store
+# persisted to a volume, so it needs no external DB. The "newsroom" namespace is
+# pre-created to match TEMPORAL_NAMESPACE in config.py.
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: hermes_pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hermes
+      POSTGRES_PASSWORD: hermes
+      POSTGRES_DB: hermes_newsroom
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hermes -d hermes_newsroom"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  temporal:
+    image: temporalio/temporal:latest
+    container_name: hermes_temporal
+    restart: unless-stopped
+    command:
+      - server
+      - start-dev
+      - --ip
+      - 0.0.0.0
+      - --port
+      - "7233"
+      - --ui-port
+      - "8233"
+      - --namespace
+      - newsroom
+      - --db-filename
+      - /data/temporal.db
+      - --log-level
+      - warn
+    ports:
+      - "7233:7233"   # gRPC frontend (TEMPORAL_HOST)
+      - "8233:8233"   # Web UI
+    volumes:
+      - temporaldata:/data
+    healthcheck:
+      test:
+        - CMD
+        - temporal
+        - operator
+        - namespace
+        - describe
+        - --namespace
+        - newsroom
+        - --address
+        - 127.0.0.1:7233
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  pgdata:
+    name: hermes_pgdata
+  temporaldata:
+    name: hermes_temporaldata

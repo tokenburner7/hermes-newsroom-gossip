@@ -1,0 +1,21 @@
+=== arxiv_ingest 20260621T090007 ===
+warning: `VIRTUAL_ENV=/Users/tn/.hermes/hermes-agent/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+arXiv ingest query=cat:cs.AI OR cat:cs.CR OR cat:cs.LG since=3h mode=abstract 
+only rate=<=1 req/3s
+┏━━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ metric         ┃ value ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ papers fetched │     0 │
+│ rows upserted  │     0 │
+└────────────────┴───────┘
+ingest complete
+=== arxiv_ingest 20260621T120001 ===
+arXiv ingest query=cat:cs.AI OR cat:cs.CR OR cat:cs.LG since=3h mode=abstract 
+only rate=<=1 req/3s
+┏━━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ metric         ┃ value ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ papers fetched │     0 │
+│ rows upserted  │     0 │
+└────────────────┴───────┘
+ingest complete
