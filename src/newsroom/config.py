@@ -115,9 +115,9 @@ class Settings(BaseSettings):
 
     # --- Distribution & validation -----------------------------------------
     # Canonical production site URL (Cloudflare Pages). No trailing slash.
-    brand_url: str = "https://aixcrypto.news"  # TODO: update for gossip launch
+    brand_url: str = "https://mport.net"
     # Brand X/Twitter handle (the dedicated account, not a personal one).
-    x_handle: str = "@aixcrypto_news"           # TODO: update for gossip launch
+    x_handle: str = "@mport_net"
     # Telegram target for the `telegram` skill: @channel username or chat id.
     telegram_channel: str = ""
     # Where threads/posts send readers to subscribe. Empty => brand_url + '#subscribe'.
